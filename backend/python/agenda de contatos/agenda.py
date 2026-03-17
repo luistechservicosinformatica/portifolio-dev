@@ -1,180 +1,230 @@
+import json
+
 AGENDA = {}
 
 
-def mostrar_contatos():
+def mostrarContatos():
+    print()
     if AGENDA:
         for contato in AGENDA:
-            buscar_contato(contato)
+            buscarContato(contato)
     else:
-        print('>>>> Angenda vazia')
+        print(">>>> Agenda vazia")
+    print()
 
 
-def buscar_contato(contato):
+def buscarContato(contato):
     try:
-        print('Nome:', contato)
-        print('Telefone:', AGENDA[contato]['telefone'])
-        print('Email:', AGENDA[contato]['email'])
-        print('Endereço:', AGENDA[contato]['endereco'])
-        print('--------------------------------------------')
+        print()
+        print("Nome:", contato)
+        print("Telefone:", AGENDA[contato]["telefone"])
+        print("Email:", AGENDA[contato]["email"])
+        print("Endereço:", AGENDA[contato]["endereco"])
+        print("--------------------------------------------")
     except KeyError:
-        print('>>>> Contato inexistente')
+        print(">>>> Contato inexistente")
     except Exception as error:
-        print('>>>> Um erro inesperado ocorreu')
+        print(">>>> Erro inesperado")
         print(error)
 
 
-def ler_detalhes_contato():
-    telefone = input('Digite o nome do telefone: ')
-    email = input('Digite o nome do email: ')
-    endereco = input('Digite o nome do endereco: ')
+def lerDetalhesContato():
+    print()
+    telefone = input("Telefone: ")
+    email = input("Email: ")
+    endereco = input("Endereço: ")
     return telefone, email, endereco
 
 
-def incluir_editar_contato(contato, telefone, email, endereco):
+def incluirEditarContato(contato, telefone, email, endereco):
     AGENDA[contato] = {
-        'telefone': telefone,
-        'email': email,
-        'endereco': endereco,
+        "telefone": telefone,
+        "email": email,
+        "endereco": endereco,
     }
     salvar()
     print()
-    print('>>>> Contato {} adicionado/editado com sucesso'.format(contato))
+    print(f">>>> {contato} salvo com sucesso")
     print()
 
 
-def excluir_contato(contato):
+def excluirContato(contato):
     try:
         AGENDA.pop(contato)
         salvar()
         print()
-        print('>>>> Contato {} excluido com sucesso'.format(contato))
+        print(f">>>> {contato} excluído com sucesso")
         print()
     except KeyError:
-        print('>>>> Contato inexistente')
+        print(">>>> Contato inexistente")
     except Exception as error:
-        print('>>>> Um erro inesperado ocorreu')
+        print(">>>> Erro inesperado")
         print(error)
 
 
-def exportar_contatos(nome_do_arquivo):
+def exportarContatos():
+    print()
+    formato = input("Formato (csv/json): ").lower().strip()
+    nome = input("Nome do arquivo: ")
+
     try:
-        with open(nome_do_arquivo, 'w') as arquivo:
-            for contato in AGENDA:
-                telefone = AGENDA[contato]['telefone']
-                email = AGENDA[contato]['email']
-                endereco = AGENDA[contato]['endereco']
-                arquivo.write("{},{},{},{}\n".format(contato, telefone, email, endereco))
-        print('>>>> Agenda exportada com sucesso')
+        if formato == "csv":
+            with open(nome, "w") as arquivo:
+                for contato in AGENDA:
+                    d = AGENDA[contato]
+                    arquivo.write(f"{contato},{d['telefone']},{d['email']},{d['endereco']}\n")
+            print(">>>> Exportado em CSV")
+
+        elif formato == "json":
+            with open(nome, "w") as arquivo:
+                json.dump(AGENDA, arquivo, indent=4)
+            print(">>>> Exportado em JSON")
+
+        else:
+            print(">>>> Formato inválido")
+
     except Exception as error:
-        print('>>>> Algum erro ocorreu ao exportar contatos')
+        print(">>>> Erro ao exportar")
         print(error)
 
+    print()
 
-def importar_contatos(nome_do_arquivo):
+
+def importarContatos():
+    print()
+    formato = input("Formato (csv/json): ").lower().strip()
+    nome = input("Nome do arquivo: ")
+
     try:
-        with open(nome_do_arquivo, 'r') as arquivo:
-            linhas = arquivo.readlines()
-            for linha in linhas:
-                detalhes = linha.strip().split(',')
+        if formato == "csv":
+            with open(nome, "r") as arquivo:
+                for linha in arquivo:
+                    nome, telefone, email, endereco = linha.strip().split(",")
+                    incluirEditarContato(nome, telefone, email, endereco)
 
-                nome = detalhes[0]
-                telefone = detalhes[1]
-                email = detalhes[2]
-                endereco = detalhes[3]
+            print(">>>> Importado CSV")
 
-                incluir_editar_contato(nome, telefone, email, endereco)
+        elif formato == "json":
+            with open(nome, "r") as arquivo:
+                dados = json.load(arquivo)
+
+            for contato, info in dados.items():
+                incluirEditarContato(
+                    contato,
+                    info["telefone"],
+                    info["email"],
+                    info["endereco"],
+                )
+
+            print(">>>> Importado JSON")
+
+        else:
+            print(">>>> Formato inválido")
+
     except FileNotFoundError:
-        print('>>>> Arquivo não encontrado')
+        print(">>>> Arquivo não encontrado")
     except Exception as error:
-        print('>>>> Algum erro inesperado ocorreu')
+        print(">>>> Erro ao importar")
         print(error)
+
+    print()
 
 
 def salvar():
-    exportar_contatos('database.csv')
+    try:
+        with open("database.csv", "w") as arquivo:
+            for contato in AGENDA:
+                d = AGENDA[contato]
+                arquivo.write(f"{contato},{d['telefone']},{d['email']},{d['endereco']}\n")
+    except:
+        pass
 
 
 def carregar():
     try:
-        with open('database.csv', 'r') as arquivo:
-            linhas = arquivo.readlines()
-            for linha in linhas:
-                detalhes = linha.strip().split(',')
-
-                nome = detalhes[0]
-                telefone = detalhes[1]
-                email = detalhes[2]
-                endereco = detalhes[3]
-
+        with open("database.csv", "r") as arquivo:
+            for linha in arquivo:
+                nome, telefone, email, endereco = linha.strip().split(",")
                 AGENDA[nome] = {
-                    'telefone': telefone,
-                    'email': email,
-                    'endereco': endereco,
+                    "telefone": telefone,
+                    "email": email,
+                    "endereco": endereco,
                 }
-        print('>>>> Database carregado com sucesso')
-        print('>>>> {} contatos carregados'.format(len(AGENDA)))
+
+        print()
+        print(">>>> Database carregado")
+        print(f">>>> {len(AGENDA)} contatos")
+        print()
+
     except FileNotFoundError:
-        print('>>>> Arquivo não encontrado')
+        print()
+        print(">>>> Nenhum database encontrado")
+        print()
+
     except Exception as error:
-        print('>>>> Algum erro inesperado ocorreu')
+        print(">>>> Erro ao carregar")
         print(error)
 
 
-def imprimir_menu():
-    print('------------------------------------------')
-    print('1 - Mostrar todos os contatos da agenda')
-    print('2 - Buscar contato')
-    print('3 - Incluir contato')
-    print('4 - Editar contato')
-    print('5 - Excluir contato')
-    print('6 - Exportar contatos para CSV')
-    print('7 - Importar contatos CSV')
-    print('0 - Fechar agenda')
-    print('------------------------------------------')
+def imprimirMenu():
+    print()
+    print("==========================================")
+    print("[1] -> Mostrar contatos")
+    print("[2] -> Buscar contato")
+    print("[3] -> Adicionar contato")
+    print("[4] -> Editar contato")
+    print("[5] -> Excluir contato")
+    print("[6] -> Exportar contatos")
+    print("[7] -> Importar contatos")
+    print("[0] -> Sair")
+    print("==========================================")
 
 
-# INICIO DO PROGRAMA
 carregar()
+
 while True:
-    imprimir_menu()
+    imprimirMenu()
+    opcao = input("Opção: ")
 
-    opcao = input('Escolha uma opção: ')
-    if opcao == '1':
-        mostrar_contatos()
-    elif opcao == '2':
-        contato = input('Digite o nome do contato: ')
-        buscar_contato(contato)
-    elif opcao == '3':
-        contato = input('Digite o nome do contato: ')
+    match opcao:
+        case "1":
+            mostrarContatos()
 
-        try:
-            AGENDA[contato]
-            print('>>>> Contato já existente')
-        except KeyError:
-            telefone, email, endereco = ler_detalhes_contato()
-            incluir_editar_contato(contato, telefone, email, endereco)
-    elif opcao == '4':
-        contato = input('Digite o nome do contato: ')
+        case "2":
+            contato = input("Nome: ")
+            buscarContato(contato)
 
-        try:
-            AGENDA[contato]
-            print('>>>> Editando contato:', contato)
-            telefone, email, endereco = ler_detalhes_contato()
-            incluir_editar_contato(contato, telefone, email, endereco)
-        except KeyError:
-            print('>>>> Contato inexistente')
+        case "3":
+            contato = input("Nome: ")
+            if contato in AGENDA:
+                print(">>>> Já existe")
+            else:
+                telefone, email, endereco = lerDetalhesContato()
+                incluirEditarContato(contato, telefone, email, endereco)
 
-    elif opcao == '5':
-        contato = input('Digite o nome do contato: ')
-        excluir_contato(contato)
-    elif opcao == '6':
-        nome_do_arquivo = input('Digite o nome do arquivo a ser exportado: ')
-        exportar_contatos(nome_do_arquivo)
-    elif opcao == '7':
-        nome_do_arquivo = input('Digite o nome do arquivo a ser importado: ')
-        importar_contatos(nome_do_arquivo)
-    elif opcao == '0':
-        print('>>>> Fechando programa')
-        break
-    else:
-        print('>>>> Opção inválida')
+        case "4":
+            contato = input("Nome: ")
+            if contato in AGENDA:
+                telefone, email, endereco = lerDetalhesContato()
+                incluirEditarContato(contato, telefone, email, endereco)
+            else:
+                print(">>>> Não encontrado")
+
+        case "5":
+            contato = input("Nome: ")
+            excluirContato(contato)
+
+        case "6":
+            exportarContatos()
+
+        case "7":
+            importarContatos()
+
+        case "0":
+            print()
+            print(">>>> Encerrando")
+            print()
+            break
+
+        case _:
+            print(">>>> Opção inválida")

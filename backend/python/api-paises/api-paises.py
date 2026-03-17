@@ -1,92 +1,145 @@
 import json
 import sys
-
 import requests
 
-URL_ALL = "https://restcountries.eu/rest/v2/all"
-URL_NAME = "https://restcountries.eu/rest/v2/name"
+BASE_URL = "https://restcountries.com/v3.1"
+
+cache = {}
 
 
-def requisicao(url):
+def requisicao(endpoint):
+    if endpoint in cache:
+        return cache[endpoint]
+
     try:
-        resposta = requests.get(url)
+        url = f"{BASE_URL}{endpoint}"
+        resposta = requests.get(url, timeout=5)
+
         if resposta.status_code == 200:
-            return resposta.text
-    except:
-        print("Erro ao fazer requisição em:", url)
+            dados = resposta.json()
+            cache[endpoint] = dados
+            return dados
+        else:
+            print("erro:", resposta.status_code)
+
+    except Exception as error:
+        print("erro na requisição:", error)
 
 
-def parsing(texto_da_resposta):
-    try:
-        return json.loads(texto_da_resposta)
-    except:
-        print("Erro ao fazer parsing")
+def contagemDePaises():
+    dados = requisicao("/all?fields=name")
+    if dados:
+        print(f"existem {len(dados)} países no mundo!")
 
 
-def contagem_de_paises():
-    resposta = requisicao(URL_ALL)
-    if resposta:
-        lista_de_paises = parsing(resposta)
-        if lista_de_paises:
-            return len(lista_de_paises)
+def listarPaises():
+    dados = requisicao("/all?fields=name")
+    if dados:
+        for pais in dados:
+            print(pais["name"]["common"])
 
 
-def listar_paises(lista_de_paises):
-    for pais in lista_de_paises:
-        print(pais['name'])
+def buscarPorNome(nome):
+    return requisicao(f"/name/{nome}")
 
 
-def mostrar_populacao(nome_do_pais):
-    resposta = requisicao("{}/{}".format(URL_NAME, nome_do_pais))
-    if resposta:
-        lista_de_paises = parsing(resposta)
-        if lista_de_paises:
-            for pais in lista_de_paises:
-                print("{}: {} habitantes".format(pais['name'], pais['population']))
-    else:
-        print("País não encontrado")
+def mostrarPopulacao(nome):
+    dados = buscarPorNome(nome)
+    if dados:
+        for pais in dados:
+            print(f"{pais['name']['common']}: {pais['population']} habitantes")
 
 
-def mostrar_moedas(nome_do_pais):
-    resposta = requisicao("{}/{}".format(URL_NAME, nome_do_pais))
-    if resposta:
-        lista_de_paises = parsing(resposta)
-        if lista_de_paises:
-            for pais in lista_de_paises:
-                print("Moedas do", pais['name'])
-                moedas = pais['currencies']
-                for moeda in moedas:
-                    print("{} - {}".format(moeda['name'], moeda['code']))
-    else:
-        print("País não encontrado")
+def mostrarMoedas(nome):
+    dados = buscarPorNome(nome)
+    if dados:
+        for pais in dados:
+            print(f"Moedas de {pais['name']['common']}")
+            moedas = pais.get("currencies", {})
+            for codigo, info in moedas.items():
+                print(f"{info['name']} - {codigo}")
 
 
-def ler_nome_do_pais():
-    try:
-        nome_do_pais = sys.argv[2]
-        return nome_do_pais
-    except:
-        print("É preciso passar o nome do país")
+def buscarPorCapital(capital):
+    dados = requisicao(f"/capital/{capital}")
+    if dados:
+        for pais in dados:
+            print(pais["name"]["common"])
+
+
+def buscarPorRegiao(regiao):
+    dados = requisicao(f"/region/{regiao}")
+    if dados:
+        for pais in dados:
+            print(pais["name"]["common"])
+
+
+def buscarPorLinguagem(lingua):
+    dados = requisicao(f"/lang/{lingua}")
+    if dados:
+        for pais in dados:
+            print(pais["name"]["common"])
+
+
+def ajuda():
+    print()
+    print("uso: python api_paises.py <acao> <valor>")
+    print()
+    print("acoes disponíveis:")
+    print("contagem")
+    print("listar")
+    print("populacao <pais>")
+    print("moeda <pais>")
+    print("capital <capital>")
+    print("regiao <regiao>")
+    print("lingua <lingua>")
+    print()
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 1:
-        print("## Bem vindo ao sistema de países ##")
-        print("Uso: python paises.py <ação> <nome do país>")
-        print("Ações disponíveis: contagem, moeda, populacao")
-    else:
-        argumento1 = sys.argv[1]
+    if len(sys.argv) < 2:
+        ajuda()
+        sys.exit()
 
-        if argumento1 == "contagem":
-            numero_de_paises = contagem_de_paises()
-            print("Existem {} países no mundo todo".format(numero_de_paises))
-        elif argumento1 == "moeda":
-            pais = ler_nome_do_pais()
-            if pais:
-                mostrar_moedas(pais)
-        elif argumento1 == "populacao":
-            pais = ler_nome_do_pais()
-            if pais:
-                mostrar_populacao(pais)
-        else:
-            print("Argumento inválido")
+    acao = sys.argv[1]
+
+    match acao:
+        case "contagem":
+            contagemDePaises()
+
+        case "listar":
+            listarPaises()
+
+        case "populacao":
+            if len(sys.argv) >= 3:
+                mostrarPopulacao(sys.argv[2])
+            else:
+                print("informe o país")
+
+        case "moeda":
+            if len(sys.argv) >= 3:
+                mostrarMoedas(sys.argv[2])
+            else:
+                print("informe o país")
+
+        case "capital":
+            if len(sys.argv) >= 3:
+                buscarPorCapital(sys.argv[2])
+            else:
+                print("informe a capital")
+
+        case "regiao":
+            if len(sys.argv) >= 3:
+                buscarPorRegiao(sys.argv[2])
+            else:
+                print("informe a região")
+
+        case "lingua":
+            if len(sys.argv) >= 3:
+                buscarPorLinguagem(sys.argv[2])
+            else:
+                print("informe a língua")
+
+        case _:
+            print("ação inválida")
+            ajuda()

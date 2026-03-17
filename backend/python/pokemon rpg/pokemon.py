@@ -1,59 +1,88 @@
 import random
 
+TIPOS = {
+    "fogo": {"forte": ["planta"], "fraco": ["agua"]},
+    "agua": {"forte": ["fogo"], "fraco": ["eletrico", "planta"]},
+    "eletrico": {"forte": ["agua"], "fraco": ["terra"]},
+    "planta": {"forte": ["agua"], "fraco": ["fogo"]},
+}
 
 class Pokemon:
-
-    def __init__(self, especie, level=None, nome=None):
-        self.especie = especie
-
-        if level:
-            self.level = level
-        else:
-            self.level = random.randint(1, 100)
-
-        if nome:
-            self.nome = nome
-        else:
-            self.nome = especie
-
-        self.ataque = self.level * 5
-        self.vida = self.level * 10
+    def __init__(self, nome, tipo, level=1):
+        self.nome = nome
+        self.tipo = tipo
+        self.level = level
+        self.xp = 0
+        self.vida_max = level * 20
+        self.vida = self.vida_max
+        self.ataque = level * 5
+        self.status = None
 
     def __str__(self):
-        return "{}({})".format(self.nome, self.level)
+        return f"{self.nome} (Lv.{self.level}) [{self.tipo}]"
 
-    def atacar(self, pokemon):
-        ataque_efetivo = int((self.ataque * random.random() * 1.3))
-        pokemon.vida -= ataque_efetivo
+    def esta_vivo(self):
+        return self.vida > 0
 
-        print("{} perdeu {} pontos de vida".format(pokemon, ataque_efetivo))
+    def aplicar_status(self):
+        if self.status == "burn":
+            dano = int(self.vida_max * 0.05)
+            self.vida -= dano
+            print(f"{self.nome} sofre {dano} de burn")
+        elif self.status == "poison":
+            dano = int(self.vida_max * 0.08)
+            self.vida -= dano
+            print(f"{self.nome} sofre {dano} de poison")
 
-        if pokemon.vida <= 0:
-            print("{} foi derrotado".format(pokemon))
-            return True
-        else:
+    def tentar_aplicar_status(self, alvo):
+        chance = random.random()
+        if chance < 0.2:
+            alvo.status = random.choice(["burn", "poison", "stun"])
+            print(f"{alvo.nome} foi afetado por {alvo.status}!")
+
+    def ganhar_xp(self, xp):
+        self.xp += xp
+        if self.xp >= 100:
+            self.level_up()
+
+    def level_up(self):
+        self.level += 1
+        self.xp = 0
+        self.vida_max += 10
+        self.ataque += 3
+        self.vida = self.vida_max
+        print(f"{self.nome} subiu para nível {self.level}!")
+
+    def multiplicador(self, alvo):
+        if alvo.tipo in TIPOS[self.tipo]["forte"]:
+            return 1.5
+        if alvo.tipo in TIPOS[self.tipo]["fraco"]:
+            return 0.5
+        return 1
+
+    def atacar(self, alvo):
+        if self.status == "stun":
+            print(f"{self.nome} está atordoado!")
+            self.status = None
             return False
 
+        critico = 2 if random.random() < 0.1 else 1
 
-class PokemonEletrico(Pokemon):
-    tipo = "eletrico"
+        mult = self.multiplicador(alvo)
 
-    def atacar(self, pokemon):
-        print("{} lançou um raio do trovão em {}".format(self, pokemon))
-        return super().atacar(pokemon)
+        dano = int(self.ataque * random.uniform(0.7, 1.3) * mult * critico)
+        alvo.vida -= dano
 
+        print(f"{self.nome} causou {dano} dano em {alvo.nome}")
 
-class PokemonFogo(Pokemon):
-    tipo = "fogo"
+        if critico > 1:
+            print("CRÍTICO!")
 
-    def atacar(self, pokemon):
-        print("{} lançou uma bola de fogo na cabeça de {}".format(self, pokemon))
-        return super().atacar(pokemon)
+        self.tentar_aplicar_status(alvo)
 
+        if alvo.vida <= 0:
+            print(f"{alvo.nome} foi derrotado!")
+            self.ganhar_xp(50)
+            return True
 
-class PokemonAgua(Pokemon):
-    tipo = "água"
-
-    def atacar(self, pokemon):
-        print("{} lançou um jato d'água em {}".format(self, pokemon))
-        return super().atacar(pokemon)
+        return False
