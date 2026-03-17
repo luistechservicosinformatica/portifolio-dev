@@ -57,7 +57,8 @@ python3 api-paises.py listar
 #### Show population
 
 ```bash
-python3 api-paises.py populacao Brazil
+python3 api-paises.py populacao <Country>
+example: python3 api-paises.py populacao Brazil
 ```
 
 ---
@@ -65,7 +66,8 @@ python3 api-paises.py populacao Brazil
 #### Show currencies
 
 ```bash
-python3 api-paises.py moeda Brazil
+python3 api-paises.py moeda <Country>
+example: python3 api-paises.py moeda Brazil
 ```
 
 ---
@@ -73,6 +75,7 @@ python3 api-paises.py moeda Brazil
 #### Search by capital
 
 ```bash
+python3 api-paises.py capital <Capital of Country>
 python3 api-paises.py capital Berlin
 ```
 
@@ -81,6 +84,7 @@ python3 api-paises.py capital Berlin
 #### Filter by region
 
 ```bash
+python3 api-paises.py regiao <Region of World>
 python3 api-paises.py regiao Europe
 ```
 
@@ -89,7 +93,8 @@ python3 api-paises.py regiao Europe
 #### Search by language
 
 ```bash
-python3 api-paises.py lingua english
+python3 api-paises.py lingua <language>
+python3 api-paises.py lingua portuguese
 ```
 
 ---
@@ -230,7 +235,8 @@ python3 api-paises.py listar
 ### População
 
 ```bash
-python3 api-paises.py populacao Brazil
+python3 api-paises.py populacao <País>
+exemplo: python3 api-paises.py populacao Brazil
 ```
 
 ---
@@ -238,7 +244,8 @@ python3 api-paises.py populacao Brazil
 ### Moedas
 
 ```bash
-python3 api-paises.py moeda Brazil
+python3 api-paises.py moeda <País>
+exemplo: python3 api-paises.py moeda Brazil
 ```
 
 ---
@@ -246,7 +253,8 @@ python3 api-paises.py moeda Brazil
 ### Buscar por capital
 
 ```bash
-python3 api-paises.py capital Berlin
+python3 api-paises.py capital <Capital do País>
+exemplo: python3 api-paises.py capital Berlin
 ```
 
 ---
@@ -254,7 +262,8 @@ python3 api-paises.py capital Berlin
 ### Filtrar por região
 
 ```bash
-python3 api-paises.py regiao Europe
+python3 api-paises.py regiao <Região do Mundo>
+exemplo: python3 api-paises.py regiao Europe
 ```
 
 ---
@@ -262,7 +271,8 @@ python3 api-paises.py regiao Europe
 ### Buscar por língua
 
 ```bash
-python3 api-paises.py lingua english
+python3 api-paises.py lingua <linguagem>
+exemplo: python3 api-paises.py lingua english
 ```
 
 ---
