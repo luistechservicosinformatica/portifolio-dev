@@ -28,8 +28,8 @@ Contacts are stored in memory as a dictionary:
 
 ```json
 {
-    "john": {
-        phone": "123456",
+    "John Doe": {
+        "phone": "123456",
         "email": "john@email.com",
         "address": "Street A"
     }
@@ -156,10 +156,10 @@ Example:
 
 ```json
 {
-    "John Doe": {
-        "telefone": "123456",
-        "email": "john@email.com",
-        "endereco": "Street A"
+    "Jhon Doe": {
+        "phone": "654321",
+        "email": "john@testemail.com",
+        "address": "Street B"
     }
 }
 ```
@@ -343,6 +343,18 @@ nome,telefone,email,endereco
 ### JSON
 
 Usado para importação/exportação manual.
+
+Exemplo:
+
+```json
+{
+    "João da Silva": {
+        "telefone": "654321",
+        "email": "joao@emaildeteste.com",
+        "endereco": "Rua B"
+    }
+}
+```
 
 ---
 
