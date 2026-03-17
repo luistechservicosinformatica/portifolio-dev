@@ -46,15 +46,7 @@ Sistema de batalha:
 
 ```bash
 python3 main.py
-```## 👊 Author
-
-Luís Fernando Reis
-
----
-
-## 📄 License
-
-Free for study and modification.
+```
 
 ---
 
@@ -138,11 +130,11 @@ Luís Fernando Reis
 
 ---
 
-## 📄 Licensa de uso
+## 📄 Licença de uso
 
 Livre para estudo e modificação.
 
-
+---
 
 ## 🇺🇸 English
 
@@ -279,4 +271,3 @@ Luís Fernando Reis
 ## 📄 License
 
 Free for study and modification.
-
