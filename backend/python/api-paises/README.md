@@ -76,7 +76,7 @@ example: python3 api-paises.py moeda Brazil
 
 ```bash
 python3 api-paises.py capital <Capital of Country>
-python3 api-paises.py capital Berlin
+example: python3 api-paises.py capital Berlin
 ```
 
 ---
@@ -85,7 +85,7 @@ python3 api-paises.py capital Berlin
 
 ```bash
 python3 api-paises.py regiao <Region of World>
-python3 api-paises.py regiao Europe
+example: python3 api-paises.py regiao Europe
 ```
 
 ---
@@ -94,7 +94,7 @@ python3 api-paises.py regiao Europe
 
 ```bash
 python3 api-paises.py lingua <language>
-python3 api-paises.py lingua portuguese
+example: python3 api-paises.py lingua portuguese
 ```
 
 ---
