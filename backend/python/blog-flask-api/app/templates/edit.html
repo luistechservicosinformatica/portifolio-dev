@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Post</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Editar Post</h1>
+
+    <form method="POST" action="{{ url_for('main.edit_post', id=post.id) }}">
+        <label>Título</label>
+        <input name="title" value="{{ post.title }}">
+
+        <label>Autor</label>
+        <input name="author" value="{{ post.author }}">
+
+        <label>Conteúdo</label>
+        <textarea name="content">{{ post.content }}</textarea>
+
+        <button type="submit">Salvar</button>
+    </form>
+
+</div>
+
+</body>
+</html>
