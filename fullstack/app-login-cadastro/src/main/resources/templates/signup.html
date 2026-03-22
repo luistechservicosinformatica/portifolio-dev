@@ -1,23 +1,25 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Cadastro</title>
-
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
             height: 100vh;
-            background: linear-gradient(135deg, #6ec1c2, #5aa9aa);
+            background: #568203;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
 
         .register-container {
@@ -61,7 +63,7 @@
         .btn {
             width: 100%;
             padding: 10px;
-            background: #28a745;
+            background: #007bff;
             border: none;
             color: white;
             border-radius: 6px;
@@ -71,7 +73,7 @@
         }
 
         .btn:hover {
-            background: #1e7e34;
+            background: #1C4293;
         }
 
         .login-link {
@@ -80,7 +82,7 @@
         }
 
         .login-link a {
-            color: #007bff;
+            color: #68BA7F;
             text-decoration: none;
             font-weight: bold;
         }
@@ -89,25 +91,47 @@
             text-decoration: underline;
         }
 
-        .error-box {
-            margin-top: 10px;
-            padding: 8px;
-            background: #f8d7da;
-            color: #842029;
-            border-radius: 5px;
-            font-size: 13px;
-            display: none;
+        #errorCard {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #f44336;
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            z-index: 9999;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            min-width: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideIn 0.5s ease-out forwards;
         }
 
+        @keyframes slideIn {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(120%); opacity: 0; }
+        }
     </style>
 </head>
 <body>
 
+<div th:if="${erro}" id="errorCard">
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <span th:text="${erro}"></span>
+    </div>
+    <button onclick="closeError()" style="background: none; border: none; color: white; cursor: pointer; font-size: 20px; font-weight: bold;">&times;</button>
+</div>
+
 <div class="register-container">
     <h1>Cadastro</h1>
 
-    <form method="POST">
-
+    <form action="/cadastro" method="POST">
         <div class="input-group">
             <label>Nome</label>
             <input type="text" name="name" placeholder="Digite seu nome" required>
@@ -120,40 +144,87 @@
 
         <div class="input-group">
             <label>Senha</label>
-            <input type="password" name="password" placeholder="Digite sua senha" required>
+            <input type="password" name="password" id="password" placeholder="Digite sua senha" required>
         </div>
 
         <div class="input-group">
             <label>Confirmar Senha</label>
-            <input type="password" name="confirmPassword" placeholder="Confirme sua senha" required>
+            <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirme sua senha" required>
         </div>
 
         <button class="btn" type="submit">Cadastrar</button>
-
     </form>
 
     <div class="login-link">
         Já tem conta? <a href="/login">Entrar</a>
     </div>
-
-    <div class="error-box">
-        Erro ao cadastrar usuário
-    </div>
-
 </div>
 
 <script>
+    // Função para fechar o card com animação
+    function closeError(card) {
+        if (card) {
+            card.style.animation = "slideOut 0.5s ease-in forwards";
+            setTimeout(() => card.remove(), 500);
+        }
+    }
+
+    // Função para criar o card de erro dinamicamente (substitui o alert)
+    function showClientError(message) {
+        // Remove card anterior se existir para não acumular
+        const oldCard = document.getElementById('errorCard');
+        if (oldCard) oldCard.remove();
+
+        const card = document.createElement('div');
+        card.id = 'errorCard';
+        card.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span>${message}</span>
+            </div>
+            <button onclick="this.parentElement.remove()" style="background: none; border: none; color: white; cursor: pointer; font-size: 20px; font-weight: bold;">&times;</button>
+        `;
+
+        // Aplica o estilo via JS para garantir que fique igual ao CSS
+        Object.assign(card.style, {
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            backgroundColor: '#f44336',
+            color: 'white',
+            padding: '16px',
+            borderRadius: '8px',
+            zIndex: '9999',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+            minWidth: '280px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            fontFamily: 'Segoe UI, sans-serif',
+            animation: 'slideIn 0.5s ease-out forwards'
+        });
+
+        document.body.appendChild(card);
+
+        // Auto-fechar após 4 segundos
+        setTimeout(() => closeError(card), 4000);
+    }
+
+    // Lógica para o card que já vem do Thymeleaf (Erro do Servidor)
+    const serverCard = document.getElementById('errorCard');
+    if (serverCard) {
+        setTimeout(() => closeError(serverCard), 4000);
+    }
+
+    // Validação do Formulário
     document.querySelector("form").addEventListener("submit", function(e) {
-        const senha = document.querySelector("input[name='password']").value;
-        const confirmar = document.querySelector("input[name='confirmPassword']").value;
+        const senha = document.getElementById('password').value;
+        const confirmar = document.getElementById('confirmPassword').value;
 
         if (senha !== confirmar) {
-            alert("As senhas não coincidem!");
-            e.preventDefault();
+            e.preventDefault(); // Impede o envio do formulário
+            showClientError("As senhas não coincidem!"); // Exibe o card em vez do alert
         }
     });
 </script>
-
 </body>
-
 </html>

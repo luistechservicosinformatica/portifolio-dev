@@ -35,6 +35,7 @@ public class AppLoginCadastroController {
         }
 
         model.addAttribute("id", CookieService.getCookie(request, "userId"));
+        model.addAttribute("name", CookieService.getCookie(request, "userName"));
 
         return "index";
     }
@@ -48,16 +49,22 @@ public class AppLoginCadastroController {
     }
 
     @PostMapping("/logar")
-    public String userLogin(User user, HttpServletResponse response, HttpServletRequest request, Model model) throws UnsupportedEncodingException {
+    public String userLogin(User user, HttpServletResponse response, RedirectAttributes redirect) throws UnsupportedEncodingException {
         User loginedUser = repository.findByEmail(user.getEmail());
 
-        if (loginedUser != null && encoder.matches(user.getPassword(), loginedUser.getPassword())) {
-            CookieService.setCookie(response, "userId", String.valueOf(loginedUser.getId()), 10000);
-            return "redirect:/";
+        if (loginedUser == null || !encoder.matches(user.getPassword(), loginedUser.getPassword())) {
+            redirect.addFlashAttribute("erro", "E-mail ou senha incorretos!");
+            return "redirect:/login";
         }
 
-        model.addAttribute("erro", "E-mail ou senha inválidos");
-        return "login";
+        CookieService.setCookie(response, "userId", String.valueOf(loginedUser.getId()), 18000);
+        CookieService.setCookie(response, "userName", loginedUser.getName(), 18000);
+        return "redirect:/";
+    }
+
+    @GetMapping("/logar")
+    public String logar() {
+        return "redirect:/login";
     }
 
     @GetMapping("/logout")
@@ -69,7 +76,13 @@ public class AppLoginCadastroController {
     //------------------------CADASTRO---------------------------------------
 
     @GetMapping("/cadastro")
-    public String signup() {
+    public String signup(HttpServletRequest request) throws UnsupportedEncodingException {
+        String userId = CookieService.getCookie(request, "userId");
+
+        if (userId != null && !userId.isEmpty()) {
+            return "redirect:/";
+        }
+
         return "signup";
     }
 

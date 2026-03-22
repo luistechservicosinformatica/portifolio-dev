@@ -1,20 +1,22 @@
-<!DOCTYPE html>
+<!DOCTYPE>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <title>Painel</title>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #6ec1c2, #5aa9aa);
+            background: #5B455E;
             padding: 30px;
         }
 
@@ -66,7 +68,7 @@
 <div class="container">
 
     <div class="card">
-        <h1>Seja muito bem-vindo, ${user.name}!</h1>
+        <h1>Seja muito bem-vindo(a), <i><span th:text="${name}"></span></i>!</h1>
         <p class="info">
             Você está logado no sistema.
             Para realizar logout, basta clicar sob o botão vermelho.
@@ -83,6 +85,13 @@
         <h2>Sobre o sistema</h2>
         <p class="info">
             Este é um sistema de login e cadastro desenvolvido com Java (Spring Boot) por Luís Fernando Reis.
+        </p>
+        <p class="info">
+            Para mais detalhes técnicos sobre a aplicação e o seu funcionamento com uma API, veja o 'README.md' presente no repositório.
+        </p>
+        <p class="info">
+            Sinta-se em casa para testar absolutamente tudo da aplicação. As rotas, os tratamentos de erros, autenticação por cookie e de
+            brinde ainda pode tentar aplicar uma vulnerabilidade XSS (Cross-Site-Scripting) ou SQL Injection.
         </p>
     </div>
 

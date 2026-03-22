@@ -5,16 +5,18 @@
     <title>Login</title>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
             height: 100vh;
-            background: linear-gradient(135deg, #6ec1c2, #5aa9aa);
+            background: #4682B4;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -61,7 +63,7 @@
         .btn {
             width: 100%;
             padding: 10px;
-            background: #007bff;
+            background: #28a745;
             border: none;
             color: white;
             border-radius: 6px;
@@ -71,7 +73,7 @@
         }
 
         .btn:hover {
-            background: #0056b3;
+            background: #2E6F40;
         }
 
         .register {
@@ -97,6 +99,54 @@
             border-radius: 5px;
             font-size: 13px;
             display: none; /* ativa depois via backend */
+        }
+
+        .toast-error {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #ff4d4d;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideIn 0.5s ease-out forwards;
+        }
+
+        .toast-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background-color: rgba(255,255,255,0.5);
+            width: 100%;
+            animation: shrink 3s linear forwards;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        @keyframes shrink {
+            from { width: 100%; }
+            to { width: 0%; }
         }
 
     </style>
@@ -132,11 +182,34 @@
 
 </div>
 
+<div th:if="${erro}" id="errorCard"
+     style="position: fixed; top: 20px; right: 20px; background-color: #f44336; color: white;
+            padding: 16px; border-radius: 4px; z-index: 9999; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            min-width: 250px; display: flex; align-items: center; justify-content: space-between;
+            font-family: sans-serif; animation: slideIn 0.5s ease-out;">
+
+    <span th:text="${erro}">Mensagem de erro aqui</span>
+
+    <button onclick="this.parentElement.remove()"
+            style="background: none; border: none; color: white; cursor: pointer; font-weight: bold; margin-left: 10px;">
+        &times;
+    </button>
+</div>
+
+</body>
+
 <script>
+    setTimeout(() => {
+        const card = document.getElementById('errorCard');
+        if (card) {
+            card.style.animation = "fadeOut 0.5s ease-in forwards";
+            setTimeout(() => card.remove(), 500);
+        }
+    }, 4000);
+
     if (document.cookie.includes("user=")) {
         window.location.href = "/";
     }
 </script>
 
-</body>
 </html>
