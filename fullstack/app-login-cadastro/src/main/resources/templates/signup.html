@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: linear-gradient(135deg, #6ec1c2, #5aa9aa);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .register-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            width: 350px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .register-container h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #28a745;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background: #28a745;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #1e7e34;
+        }
+
+        .login-link {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-box {
+            margin-top: 10px;
+            padding: 8px;
+            background: #f8d7da;
+            color: #842029;
+            border-radius: 5px;
+            font-size: 13px;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="register-container">
+    <h1>Cadastro</h1>
+
+    <form method="POST">
+
+        <div class="input-group">
+            <label>Nome</label>
+            <input type="text" name="name" placeholder="Digite seu nome" required>
+        </div>
+
+        <div class="input-group">
+            <label>E-mail</label>
+            <input type="email" name="email" placeholder="Digite seu e-mail" required>
+        </div>
+
+        <div class="input-group">
+            <label>Senha</label>
+            <input type="password" name="password" placeholder="Digite sua senha" required>
+        </div>
+
+        <div class="input-group">
+            <label>Confirmar Senha</label>
+            <input type="password" name="confirmPassword" placeholder="Confirme sua senha" required>
+        </div>
+
+        <button class="btn" type="submit">Cadastrar</button>
+
+    </form>
+
+    <div class="login-link">
+        Já tem conta? <a href="/login">Entrar</a>
+    </div>
+
+    <div class="error-box">
+        Erro ao cadastrar usuário
+    </div>
+
+</div>
+
+<script>
+    document.querySelector("form").addEventListener("submit", function(e) {
+        const senha = document.querySelector("input[name='password']").value;
+        const confirmar = document.querySelector("input[name='confirmPassword']").value;
+
+        if (senha !== confirmar) {
+            alert("As senhas não coincidem!");
+            e.preventDefault();
+        }
+    });
+</script>
+
+</body>
+
+</html>

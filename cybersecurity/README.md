@@ -8,5 +8,7 @@ Topics:
 - packet sniffing
 - web crawling
 - low level networking
+- malwares
+- exploit
 
 All tools are for educational purposes and were tested only in controlled environments.

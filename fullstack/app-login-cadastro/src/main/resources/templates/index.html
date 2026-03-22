@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #6ec1c2, #5aa9aa);
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #b02a37;
+        }
+
+        .info {
+            margin-top: 10px;
+            color: #555;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(10px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="card">
+        <h1>Seja muito bem-vindo, ${user.name}!</h1>
+        <p class="info">
+            Você está logado no sistema.
+            Para realizar logout, basta clicar sob o botão vermelho.
+        </p>
+
+        <br>
+
+        <form action="/logout" method="get">
+            <button class="logout-btn">Sair</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Sobre o sistema</h2>
+        <p class="info">
+            Este é um sistema de login e cadastro desenvolvido com Java (Spring Boot) por Luís Fernando Reis.
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>
