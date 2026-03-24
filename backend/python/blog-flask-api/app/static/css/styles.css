@@ -6,101 +6,164 @@
 
 body {
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #0f172a, #020617);
-    color: #e2e8f0;
-    padding: 40px;
+    background: linear-gradient(135deg, #6811da, #190043);
+    min-height: 100vh;
+    padding: 40px 20px;
+    color: #333;
 }
 
 .container {
-    max-width: 800px;
+    max-width: 900px;
     margin: auto;
 }
 
 h1 {
     text-align: center;
     margin-bottom: 30px;
-    font-size: 2.5rem;
-    color: #f8fafc;
+    color: #fff;
+    font-size: 32px;
 }
 
 form {
-    background: rgba(15, 23, 42, 0.8);
-    padding: 20px;
+    background: #fff;
+    padding: 25px;
     border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     margin-bottom: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    animation: fadeIn 0.4s ease;
 }
 
-input, textarea {
+form label {
+    font-size: 14px;
+    color: #555;
+    display: block;
+    margin-top: 10px;
+}
+
+form input,
+form textarea {
     width: 100%;
     padding: 12px;
-    margin-top: 8px;
-    margin-bottom: 15px;
+    margin-top: 5px;
     border-radius: 8px;
-    border: none;
+    border: 1px solid #ccc;
     outline: none;
+    transition: 0.3s;
+    font-size: 14px;
+}
 
-    background: #020617;
-    color: #e2e8f0;
-    border: 1px solid rgba(255,255,255,0.05);
+form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+form input:focus,
+form textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0,123,255,0.2);
 }
 
 button {
+    margin-top: 15px;
     width: 100%;
     padding: 12px;
-    background: linear-gradient(135deg, #6366f1, #22c55e);
+    background: #007bff;
     border: none;
+    color: #fff;
     border-radius: 8px;
-    color: white;
-    font-weight: bold;
+    font-size: 15px;
     cursor: pointer;
     transition: 0.3s;
 }
 
-
-.post {
-    background: rgba(15, 23, 42, 0.85);
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-
-    border-left: 4px solid #6366f1;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-
-    transition: 0.3s;
+button:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
 }
 
+.post {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    margin-bottom: 20px;
+    animation: fadeInUp 0.4s ease;
+    position: relative;
+}
 
 .post h2 {
-    color: #f1f5f9;
+    color: #222;
     margin-bottom: 5px;
 }
 
 .post h4 {
-    color: #94a3b8;
+    font-size: 13px;
+    color: #777;
     margin-bottom: 10px;
 }
 
 .post p {
-    color: #cbd5f5;
-    line-height: 1.5;
+    line-height: 1.6;
+    color: #444;
 }
 
 .actions {
     margin-top: 15px;
+    display: flex;
+    gap: 10px;
 }
 
 .actions a {
-    margin-right: 15px;
+    flex: 1;
+    text-align: center;
+    padding: 8px;
+    border-radius: 6px;
     text-decoration: none;
-    font-weight: bold;
-    transition: 0.2s;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.actions a:first-child {
+    background: #57bf59;
+    color: #333;
+}
+
+.actions a:first-child:hover {
+    background: #39a559;
+}
+
+.actions a:last-child {
+    background: #dc3545;
+    color: #fff;
+}
+
+.actions a:last-child:hover {
+    background: #b02a37;
 }
 
 hr {
     border: none;
     height: 1px;
-    background: rgba(255,255,255,0.05);
+    background: rgba(255,255,255,0.3);
     margin: 30px 0;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(15px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 20px 10px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
 }
